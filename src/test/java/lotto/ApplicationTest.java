@@ -1,13 +1,12 @@
 package lotto;
 
-import camp.nextstep.edu.missionutils.test.NsTest;
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
-
 import static camp.nextstep.edu.missionutils.test.Assertions.assertRandomUniqueNumbersInRangeTest;
 import static camp.nextstep.edu.missionutils.test.Assertions.assertSimpleTest;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import camp.nextstep.edu.missionutils.test.NsTest;
+import java.util.List;
+import org.junit.jupiter.api.Test;
 
 class ApplicationTest extends NsTest {
     private static final String ERROR_MESSAGE = "[ERROR]";
@@ -50,6 +49,54 @@ class ApplicationTest extends NsTest {
     void 예외_테스트() {
         assertSimpleTest(() -> {
             runException("1000j");
+            assertThat(output()).contains(ERROR_MESSAGE);
+        });
+    }
+
+    @Test
+    void 구입_금액이_1000원_단위가_아니면_예외() {
+        assertSimpleTest(() -> {
+            runException("1500");
+            assertThat(output()).contains(ERROR_MESSAGE);
+        });
+    }
+
+    @Test
+    void 당첨_번호가_6개가_아니면_예외() {
+        assertSimpleTest(() -> {
+            runException("8000", "1,2,3,4,5");
+            assertThat(output()).contains(ERROR_MESSAGE);
+        });
+    }
+
+    @Test
+    void 당첨_번호에_중복이_있으면_예외() {
+        assertSimpleTest(() -> {
+            runException("8000", "1,2,3,4,5,5");
+            assertThat(output()).contains(ERROR_MESSAGE);
+        });
+    }
+
+    @Test
+    void 당첨_번호가_범위를_벗어나면_예외() {
+        assertSimpleTest(() -> {
+            runException("8000", "1,2,3,4,5,46");
+            assertThat(output()).contains(ERROR_MESSAGE);
+        });
+    }
+
+    @Test
+    void 보너스_번호가_당첨_번호와_중복되면_예외() {
+        assertSimpleTest(() -> {
+            runException("8000", "1,2,3,4,5,6", "6");
+            assertThat(output()).contains(ERROR_MESSAGE);
+        });
+    }
+
+    @Test
+    void 보너스_번호가_범위를_벗어나면_예외() {
+        assertSimpleTest(() -> {
+            runException("8000", "1,2,3,4,5,6", "46");
             assertThat(output()).contains(ERROR_MESSAGE);
         });
     }
