@@ -69,5 +69,9 @@ public class InputView {
         if (!input.matches("-?\\d+")) {
             throw new IllegalArgumentException("[ERROR] 숫자를 입력해주세요.");
         }
+        long number = Long.parseLong(input);
+        if (number > Integer.MAX_VALUE || number < Integer.MIN_VALUE) {
+            throw new IllegalArgumentException("[ERROR] 숫자가 int 범위를 초과했습니다.");
+        }
     }
 }
